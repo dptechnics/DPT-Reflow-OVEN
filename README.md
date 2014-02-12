@@ -1,4 +1,4 @@
 reflowoven
 ==========
 
-Open source reflow oven board control application
+This is the official control application for the DPTechnics Reflow Oven controller. 
