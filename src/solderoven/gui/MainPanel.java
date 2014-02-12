@@ -29,6 +29,7 @@ public class MainPanel extends JPanel{
      * Construct the application GUI
      */
     private void constructGUI(){
+        this.add(new StatusPanel(model.getBoardModel()));
         this.add(new TemperatureChart(new TemperatureChartModel(model.getBoardModel())));
     }
 }
