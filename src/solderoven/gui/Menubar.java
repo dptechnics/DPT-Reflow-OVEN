@@ -98,7 +98,7 @@ public class Menubar extends JMenuBar implements PropertyChangeListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Connect to the board
-                model.getOvenBoard().connectToBoard();
+                model.getOvenBoard().closeConnection();
             }       
         });
         disconnect.setMnemonic(I18N.getInstance().getString("btnDisconectMnemonic").charAt(0));

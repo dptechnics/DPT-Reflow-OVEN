@@ -1,6 +1,8 @@
 package solderoven.gui;
 
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JLabel;
@@ -50,33 +52,83 @@ public class StatusPanel extends JPanel implements PropertyChangeListener{
     public StatusPanel(BoardModel model){
         this.model = model;
         
-        // Use grid layout
-        this.setLayout(new GridLayout(5,2));
+        // Set up gridbag layout
+        this.setLayout(new GridBagLayout());
         
-        // Add temperature status 
-        this.add(new JLabel(I18N.getInstance().getString("lblTemperature")+":"));
-        temperatureField = new JLabel(model.getCurrentStatus().getTemperature() + "°C");
-        this.add(temperatureField);
+        // Add temperature status
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5, 5, 0, 10);
+        this.add(new JLabel(I18N.getInstance().getString("lblTemperature")+":"), c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5, 5, 0, 10);
+        temperatureField = new JLabel(String.format("%05.2f", model.getCurrentStatus().getTemperature()) + "°C");
+        this.add(temperatureField, c);
         
         // Add sensor status 
-        this.add(new JLabel(I18N.getInstance().getString("lblSensor")+":"));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5, 5, 0, 0);
+        this.add(new JLabel(I18N.getInstance().getString("lblSensor")+":"), c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5,5,0,0);
         sensorField = new JLabel(model.getCurrentStatus().isSensorConnected() ? "OK" : "NC");
-        this.add(sensorField);
+        this.add(sensorField, c);
         
         // Add the heater state 
-        this.add(new JLabel(I18N.getInstance().getString("lblHeater")+":"));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 2;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5, 5, 0, 0);
+        this.add(new JLabel(I18N.getInstance().getString("lblHeater")+":"), c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5,5,0,0);
         heaterField = new JLabel(model.getCurrentStatus().isHeaterOn() ? "ON" : "OFF");
-        this.add(heaterField);
+        this.add(heaterField, c);
         
         // Add the fan state
-        this.add(new JLabel(I18N.getInstance().getString("lblFan")+":"));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 3;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5, 5, 0, 0);
+        this.add(new JLabel(I18N.getInstance().getString("lblFan")+":"), c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 3;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5,5,0,0);
         fanField = new JLabel(model.getCurrentStatus().isFanOn() ? "ON" : "OFF");
-        this.add(fanField);
+        this.add(fanField, c);
         
         // Add the cooling state
-        this.add(new JLabel(I18N.getInstance().getString("lblCool")+":"));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 4;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5, 5, 5, 0);
+        this.add(new JLabel(I18N.getInstance().getString("lblCool")+":"), c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 4;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(5,5,5,0);
         coolingField = new JLabel(model.getCurrentStatus().isCoolingOn() ? "ON" : "OFF");
-        this.add(coolingField);
+        this.add(coolingField, c);
         
         // Register this view as listener
         this.model.addPropertyChangeListener(this);
@@ -91,7 +143,7 @@ public class StatusPanel extends JPanel implements PropertyChangeListener{
         switch(evt.getPropertyName()){
             case "ovenData":
                 // Update data
-                temperatureField.setText(model.getCurrentStatus().getTemperature() + "°C");
+                temperatureField.setText(String.format("%05.2f", model.getCurrentStatus().getTemperature()) + "°C");
                 sensorField.setText(model.getCurrentStatus().isSensorConnected() ? "OK" : "NC");
                 heaterField.setText(model.getCurrentStatus().isHeaterOn() ? "ON" : "OFF");
                 fanField.setText(model.getCurrentStatus().isFanOn() ? "ON" : "OFF");
