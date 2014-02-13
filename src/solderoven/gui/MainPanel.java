@@ -36,15 +36,26 @@ public class MainPanel extends JPanel{
         
         // Add the status panel with a titled border
         StatusPanel sPanel = new StatusPanel(model.getBoardModel());
-        TitledBorder border = BorderFactory.createTitledBorder(
+        TitledBorder sBorder = BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), 
                 I18N.getInstance().getString("titleStatus"),
                 TitledBorder.CENTER,
                 TitledBorder.DEFAULT_POSITION
                 );
-        sPanel.setBorder(border);
-        
+        sPanel.setBorder(sBorder);
         this.add(sPanel);
+        
+        // Add the manual control panel
+        ManualPanel mPanel = new ManualPanel(model);
+        TitledBorder mBorder = BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), 
+                I18N.getInstance().getString("titleControl"),
+                TitledBorder.CENTER,
+                TitledBorder.DEFAULT_POSITION
+                );
+        mPanel.setBorder(mBorder);
+        this.add(mPanel);
+        
         this.add(new TemperatureChart(new TemperatureChartModel(model.getBoardModel())));
     }
 }
