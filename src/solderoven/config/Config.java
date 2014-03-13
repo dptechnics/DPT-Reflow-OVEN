@@ -30,7 +30,7 @@ public class Config {
      * @return the serial communication port name.
      */
     public String getPort(){
-        return "COM2";
+        return "COM3";
     }
     
     /**

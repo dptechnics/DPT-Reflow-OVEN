@@ -24,6 +24,11 @@ public class OvenBoard {
     private SerialPort serialPort;
     
     /**
+     * Byte buffer for incoming data.
+     */
+    private byte[] byteBuffer;
+    
+    /**
      * Default constructor initializing the listenerlist. 
      */
     public OvenBoard(){
@@ -217,7 +222,7 @@ public class OvenBoard {
         @Override
         public void serialEvent(SerialPortEvent event) {
             // The oven board spits out 39 bytes per info line, ASCII coded 
-            if(event.getEventValue() == 39){
+            if(event.getEventValue() == 1){
                 // Try to parse the incoming data. 
                 try {
                     String received = new String(serialPort.readBytes());
