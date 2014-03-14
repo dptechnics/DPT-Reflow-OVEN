@@ -5,17 +5,12 @@ import solderoven.i18n.I18N;
 /**
  * @author Daan Pape
  */
-public class OvenBoardException extends Exception{
+public class OvenBoardException extends LocalizedException{
     
     /**
      * The port on which the error occurred. 
      */
     private String port;
-    
-    /**
-     * The message in the form of the localisation message key. 
-     */
-    private String messageKey;
     
     /**
      * Construct a new OvenBoardException and set a message
@@ -25,27 +20,8 @@ public class OvenBoardException extends Exception{
      * @param message a hardcoded error message.
      */
     public OvenBoardException(String port, String messageKey, String message){
-        super(message);
-        this.messageKey = messageKey;
+        super(messageKey,message);
         this.port = port;
-    }
-    
-    /**
-     * Gets the key describing this error before it is localised. 
-     * @return the unlocalised message key.
-     */
-    public String getMessageKey() {
-        return this.getMessageKey();
-    }
-    
-    
-    public String getLocalizedTitle(){
-        try{
-            return I18N.getInstance().getString(this.messageKey + "_title");
-        } catch(Exception ex){
-            // Failsafe when localisation fails
-            return "Error";
-        }    
     }
     
     /**
@@ -55,7 +31,7 @@ public class OvenBoardException extends Exception{
     @Override
     public String getLocalizedMessage(){
         try{
-            return String.format(I18N.getInstance().getString(this.messageKey), this.port);
+            return getLocalizedMessage(this.port);
         } catch(Exception ex){
             // Failsafe when localisation fails
             return super.getMessage();

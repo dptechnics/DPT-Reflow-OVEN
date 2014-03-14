@@ -1,6 +1,7 @@
 package solderoven.profile;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Internal representation of a reflow profile.
@@ -9,27 +10,29 @@ import java.io.File;
 public class ReflowProfile {
     
     /**
-     * The location of the XML profile file on disk.
-     */
-    private File profileFile;
-    
-    /**
-     * The name of this profile
+     * The name of this profile.
      */
     protected String name;
     
     /**
-     * Create a new reflow profile from a file.
-     * @param profileFile the reflow profile file.
+     * List of products associated with this reflow profile.
      */
-    public ReflowProfile(File profileFile) {
-        this.profileFile = profileFile;
-    }
+    protected List<Product> products;
     
     /**
-     * Create a new reflow profile.
+     * List of phases forming this reflow profile.
      */
-    public ReflowProfile(){
-        this(null);
+    protected List<ReflowPhase> phases;
+    
+    /**
+     * Create a new reflow profile from a file.
+     * @param name the name of the reflow profile.
+     * @param products list of products associated with this reflow profile.
+     * @products phases the phases forming this reflow profile.
+     */
+    public ReflowProfile(String name, List<Product> products, List<ReflowPhase> phases) {
+        this.name = name;
+        this.products = products;
+        this.phases = phases;
     }
 }
