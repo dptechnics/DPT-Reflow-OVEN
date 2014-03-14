@@ -48,10 +48,13 @@ public class TemperatureChart extends JPanel implements PropertyChangeListener{
     private void createAndShowChart(){
         // Create line chart showing the temperature
         tempChart = ChartFactory.createXYLineChart(
-                model.getGraphTitle(),
+                "",
                 model.getXAxisName(),
                 model.getYAxisName(),
                 this.model.getChartDataset());
+        
+        // Set transparent background on the chart
+        tempChart.setBackgroundPaint(null);
         
         // Add the chart to this panel
         chartPanel = new ChartPanel(tempChart); 

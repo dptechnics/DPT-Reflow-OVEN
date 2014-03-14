@@ -8,7 +8,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import solderoven.exception.OvenBoardException;
 import solderoven.i18n.I18N;
 import solderoven.models.AppModel;
 
@@ -59,7 +61,11 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                 if(model.getBoardModel().isConnected()){
                     model.getOvenBoard().closeConnection();
                 }else{
-                    model.getOvenBoard().connectToBoard();
+                    try {
+                        model.getOvenBoard().connectToBoard();
+                    } catch (OvenBoardException ex) {
+                        MessageDialog.showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
+                    }
                 }
             }          
         });
@@ -67,15 +73,59 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
         c.gridx = 0;
         c.gridy = 0;
         c.insets = new Insets(5, 5, 5, 5);
+        c.fill = GridBagConstraints.HORIZONTAL;
         this.add(connectBtn, c);
         
         // Add heater control button
         heaterBtn = new JButton(new AbstractAction(I18N.getInstance().getString("btnHeaterOn")){
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.getOvenBoard().setHeaterState(!model.getBoardModel().getCurrentStatus().isHeaterOn());
+                try {
+                    model.getOvenBoard().setHeaterState(!model.getBoardModel().getCurrentStatus().isHeaterOn());
+                } catch (OvenBoardException ex) {
+                    MessageDialog.showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
+                }
             }
         });
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets = new Insets(5,5,5,5);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        this.add(heaterBtn, c);
+        
+        // Add fan control button
+        fanBtn = new JButton (new AbstractAction(I18N.getInstance().getString("btnFanOn")){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    model.getOvenBoard().setFanState(!model.getBoardModel().getCurrentStatus().isFanOn());
+                } catch (OvenBoardException ex) {
+                    MessageDialog.showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
+                }
+            }        
+        });
+        c.gridx = 0;
+        c.gridy = 2;
+        c.insets = new Insets(5, 5, 5, 5);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        this.add(fanBtn, c);
+        
+        // Add cooling control button
+        coolBtn = new JButton (new AbstractAction(I18N.getInstance().getString("btnCoolOn")){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    model.getOvenBoard().setCoolState(!model.getBoardModel().getCurrentStatus().isCoolingOn());
+                } catch (OvenBoardException ex) {
+                    MessageDialog.showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
+                }
+            }
+        });
+        c.gridx = 0;
+        c.gridy = 3;
+        c.insets = new Insets(5,5,5,5);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        this.add(coolBtn, c);
         
         // Register to listen for board events
         model.getBoardModel().addPropertyChangeListener(this);

@@ -23,10 +23,10 @@ public class ExceptionHandler {
     }
     
     /**
-     * Handle exceptions on a uniform way
+     * Handle exceptions on a uniform way for logging.
      * @param ex the exception to handle
      */
-    public void handleException(Exception ex){
+    public void handleException(Exception ex) {
         ex.printStackTrace();
     }
 }

@@ -1,5 +1,8 @@
 package solderoven.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
@@ -25,6 +28,9 @@ public class MainPanel extends JPanel{
     public MainPanel(AppModel model){
         this.model = model;
         
+        // Set up gridbag layout
+        this.setLayout(new GridBagLayout());
+        
         // Construct the GUI for the app
         constructGUI();
     }
@@ -33,17 +39,6 @@ public class MainPanel extends JPanel{
      * Construct the application GUI
      */
     private void constructGUI(){
-        
-        // Add the status panel with a titled border
-        StatusPanel sPanel = new StatusPanel(model.getBoardModel());
-        TitledBorder sBorder = BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), 
-                I18N.getInstance().getString("titleStatus"),
-                TitledBorder.CENTER,
-                TitledBorder.DEFAULT_POSITION
-                );
-        sPanel.setBorder(sBorder);
-        this.add(sPanel);
         
         // Add the manual control panel
         ManualPanel mPanel = new ManualPanel(model);
@@ -54,8 +49,41 @@ public class MainPanel extends JPanel{
                 TitledBorder.DEFAULT_POSITION
                 );
         mPanel.setBorder(mBorder);
-        this.add(mPanel);
         
-        this.add(new TemperatureChart(new TemperatureChartModel(model.getBoardModel())));
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(5, 5, 5, 5);
+        c.anchor = GridBagConstraints.NORTH;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        this.add(mPanel, c);
+        
+        
+        // Add the status panel with a titled border
+        StatusPanel sPanel = new StatusPanel(model.getBoardModel());
+        TitledBorder sBorder = BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), 
+                I18N.getInstance().getString("titleStatus"),
+                TitledBorder.CENTER,
+                TitledBorder.DEFAULT_POSITION
+                );
+        sPanel.setBorder(sBorder);
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets = new Insets(5, 5, 5, 5);
+        c.anchor = GridBagConstraints.NORTH;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        this.add(sPanel, c);
+        
+        
+        // Add the temperature chart
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridheight = 2;
+        c.insets = new Insets(5, 5, 5, 5);
+        this.add(new TemperatureChart(new TemperatureChartModel(model.getBoardModel())), c);
     }
 }

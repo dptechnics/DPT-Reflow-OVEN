@@ -4,11 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import solderoven.exception.OvenBoardException;
 import solderoven.i18n.I18N;
 import solderoven.models.AppModel;
 
@@ -86,8 +89,12 @@ public class Menubar extends JMenuBar implements PropertyChangeListener{
         connect = new JMenuItem(new AbstractAction(I18N.getInstance().getString("btnConnect")){
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Connect to the board
-                model.getOvenBoard().connectToBoard();
+                try {
+                    // Connect to the board
+                    model.getOvenBoard().connectToBoard();
+                } catch (OvenBoardException ex) {
+                    //TODO: handle
+                }
             }       
         });
         connect.setMnemonic(I18N.getInstance().getString("btnConnectMnemonic").charAt(0));

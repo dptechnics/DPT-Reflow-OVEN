@@ -8,6 +8,7 @@ import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import solderoven.config.Config;
 import solderoven.exception.ExceptionHandler;
+import solderoven.exception.OvenBoardException;
 
 /**
  * @author Daan Pape
@@ -75,18 +76,24 @@ public class OvenBoard {
      * Send a command to the oven board 
      * @param command the command to send
      */
-    protected void sendBoardCommand(char command){
+    protected void sendBoardCommand(char command) throws OvenBoardException{
         try{
             serialPort.writeByte((byte) command);
         }catch(SerialPortException ex){
+            // Save error in the log
             ExceptionHandler.getInstance().handleException(ex);
+            
+            // Throw the error to the user
+            throw new OvenBoardException(ex.getPortName(), ex.getExceptionType(), ex.toString());
+        } catch (NullPointerException e) {
+            throw new OvenBoardException("UNKNOWN", "Port not open", "Port is not open");
         }
     }
     
     /**
      * Connect to the oven reflow board
      */
-    public void connectToBoard() {
+    public void connectToBoard() throws OvenBoardException{
         // Create the serial port instance 
         this.serialPort = new SerialPort(Config.getInstance().getPort());
         
@@ -103,10 +110,11 @@ public class OvenBoard {
             fireBoardConnectedEvent(true);
         }
         catch (SerialPortException ex) {
+            // Save the error in the log
             ExceptionHandler.getInstance().handleException(ex);
             
-            // Notify listeners the board is not connected
-            fireBoardConnectedEvent(false);
+            // Throw the error to the user
+            throw new OvenBoardException(ex.getPortName(), ex.getExceptionType(), ex.toString());
         }
     }
     
@@ -137,7 +145,7 @@ public class OvenBoard {
      * Set the state of the oven heater.
      * @param state true if the heating elements should be turned on.
      */
-    public void setHeaterState(boolean state){
+    public void setHeaterState(boolean state) throws OvenBoardException {
         this.sendBoardCommand(state ? 'h' : 'j');
     }
     
@@ -145,7 +153,7 @@ public class OvenBoard {
      * Set the state of the oven fan.
      * @param state true if the fan should be turned on.
      */
-    public void setFanState(boolean state){
+    public void setFanState(boolean state) throws OvenBoardException {
         this.sendBoardCommand(state ? 'f' : 'g');
     }
     
@@ -153,7 +161,7 @@ public class OvenBoard {
      * Set the state of the oven cooling mechanism.
      * @param state true if the oven cooling mechanism should be turned on. 
      */
-    public void setCoolState(boolean state){
+    public void setCoolState(boolean state) throws OvenBoardException {
         this.sendBoardCommand(state ? 'c' : 'v');
     }
     
@@ -161,7 +169,7 @@ public class OvenBoard {
      * Should the board LED's blink or not
      * @param state true if the LED's should blink
      */
-    public void setLedBlinkState(boolean state){
+    public void setLedBlinkState(boolean state) throws OvenBoardException {
         this.sendBoardCommand(state ? 'b' : 'n');
     }
     
@@ -169,7 +177,7 @@ public class OvenBoard {
      * Should the heat phase LED be on or not
      * @param state true if the heat phase LED should be turned on.
      */
-    public void setHeatLedState(boolean state){
+    public void setHeatLedState(boolean state) throws OvenBoardException {
         this.sendBoardCommand(state ? 'a' : 'q');
     }
     
@@ -177,7 +185,7 @@ public class OvenBoard {
      * Should the soak phase LED be on or not
      * @param state true if the soak phase LED should be turned on.
      */
-    public void setSoakLedState(boolean state){
+    public void setSoakLedState(boolean state) throws OvenBoardException {
         this.sendBoardCommand(state ? 'z' : 's');
     }
     
@@ -185,7 +193,7 @@ public class OvenBoard {
      * Should the reflow phase LED be on or not
      * @param state true if the reflow phase LED should be turned on.
      */
-    public void setReflowLedState(boolean state){
+    public void setReflowLedState(boolean state) throws OvenBoardException {
         this.sendBoardCommand(state ? 'e' : 'd');
     }
     
@@ -193,7 +201,7 @@ public class OvenBoard {
      * Should the cool phase LED be on or not
      * @param state true if the cool phase LED should be turned on.
      */
-    public void setCoolLedState(boolean state){
+    public void setCoolLedState(boolean state) throws OvenBoardException {
         this.sendBoardCommand(state ? 'r' : 't');
     }
     
@@ -241,7 +249,7 @@ public class OvenBoard {
                     fireBoardDataEvent(data);
                 }
                 catch (SerialPortException ex) {
-                    System.out.println(ex);
+                    ExceptionHandler.getInstance().handleException(ex);
                 }
             }
         }
