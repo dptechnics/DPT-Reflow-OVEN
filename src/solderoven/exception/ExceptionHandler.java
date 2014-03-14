@@ -15,8 +15,8 @@ public class ExceptionHandler {
     private ExceptionHandler(){};
     
     /**
-     * Get the singleton ExceptionHandler instance
-     * @return 
+     * Get the singleton ExceptionHandler instance.
+     * @return the singleton instance of the ExceptionHandler object.
      */
     public static ExceptionHandler getInstance(){
         return INSTANCE;

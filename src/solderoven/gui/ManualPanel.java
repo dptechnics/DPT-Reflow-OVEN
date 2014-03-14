@@ -8,7 +8,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import solderoven.exception.OvenBoardException;
 import solderoven.i18n.I18N;
@@ -64,7 +63,7 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                     try {
                         model.getOvenBoard().connectToBoard();
                     } catch (OvenBoardException ex) {
-                        MessageDialog.showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
+                        MessageDialog.getInstance().showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
                     }
                 }
             }          
@@ -83,7 +82,7 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                 try {
                     model.getOvenBoard().setHeaterState(!model.getBoardModel().getCurrentStatus().isHeaterOn());
                 } catch (OvenBoardException ex) {
-                    MessageDialog.showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
+                    MessageDialog.getInstance().showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
                 }
             }
         });
@@ -100,7 +99,7 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                 try {
                     model.getOvenBoard().setFanState(!model.getBoardModel().getCurrentStatus().isFanOn());
                 } catch (OvenBoardException ex) {
-                    MessageDialog.showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
+                    MessageDialog.getInstance().showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
                 }
             }        
         });
@@ -117,7 +116,7 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                 try {
                     model.getOvenBoard().setCoolState(!model.getBoardModel().getCurrentStatus().isCoolingOn());
                 } catch (OvenBoardException ex) {
-                    MessageDialog.showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
+                    MessageDialog.getInstance().showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
                 }
             }
         });

@@ -59,7 +59,7 @@ public class TemperatureChartModel extends Model implements PropertyChangeListen
         this.boardModel = model;
         this.boardModel.addPropertyChangeListener(this);
         
-        // STUB
+        //TODO: STUB STUB STUB
         targetProfile.add(0, 20);
         targetProfile.add(90, 150);
         targetProfile.add(210, 183);

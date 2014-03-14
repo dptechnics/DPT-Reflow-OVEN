@@ -51,12 +51,12 @@ public class SolderOven {
     public void createAndShowGUI(){
         EventQueue.invokeLater(new Runnable(){
             @Override
-            public void run() {
+            public void run() {     
                 // Create the window and add the main panel
                 JFrame window = new JFrame(I18N.getInstance().getString("appTitle"));
                 window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 window.setContentPane(new MainPanel(model));
-                window.setJMenuBar(new Menubar(model));
+                window.setJMenuBar(new Menubar(model, window));
                 window.pack();
                 
                 // Set the application icon

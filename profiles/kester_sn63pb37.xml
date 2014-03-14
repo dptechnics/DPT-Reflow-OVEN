@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<profile>
+	<name>Kester Standard not Pb-free</name>
+	<products>
+		<product>
+			<brand>Kester</brand>
+			<name>EP256</name>
+			<alloy>Sn62Pb36Ag2</alloy>
+			<leadfree>no</leadfree>
+			<noclean>yes</noclean>
+			<powdersize>3</powdersize>
+			<partnr>41500220</partnr>
+			<description>EP256 10% Sn62Pb36Ag2 25-45</description>
+		</product>
+		<product>
+			<brand>Kester</brand>
+			<name>EP256</name>
+			<alloy>Sn63Pb37</alloy>
+			<leadfree>no</leadfree>
+			<noclean>yes</noclean>
+			<powdersize>3</powdersize>
+			<partnr>41500596</partnr>
+			<description>EP256 9.5% Sn63Pb37 25-45</description>
+		</product>
+	</products>
+	<reflow>
+		<phase>
+			<name>preheat</name>
+			<start>00</start>
+			<stop>85</stop>
+			<targettemp>152</targettemp>
+		</phase>
+		<phase>
+			<name>soak</name>
+			<start>85</start>
+			<stop>175</stop>
+			<targettemp>181</targettemp>
+		</phase>
+		<phase>
+			<name>reflow-start</name>
+			<start>175</start>
+			<stop>210</stop>
+			<targettemp>220</targettemp>
+		</phase>
+		<phase>
+			<name>reflow-stop</name>
+			<start>210</start>
+			<stop>235</stop>
+			<targettemp>200</targettemp>
+		</phase>
+		<phase>
+			<name>cool</name>
+			<start>235</start>
+			<stop>300</stop>
+			<targettemp>100</targettemp>
+		</phase>
+	</reflow>
+</profile>

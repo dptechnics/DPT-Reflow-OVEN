@@ -79,11 +79,19 @@ public class MainPanel extends JPanel{
         
         
         // Add the temperature chart
+        TemperatureChart tChart = new TemperatureChart(new TemperatureChartModel(model.getBoardModel()));
+        TitledBorder cBorder = BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), 
+                I18N.getInstance().getString("graphTitle"),
+                TitledBorder.CENTER,
+                TitledBorder.DEFAULT_POSITION
+                );
+        tChart.setBorder(cBorder);
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 0;
         c.gridheight = 2;
         c.insets = new Insets(5, 5, 5, 5);
-        this.add(new TemperatureChart(new TemperatureChartModel(model.getBoardModel())), c);
+        this.add(tChart, c);
     }
 }

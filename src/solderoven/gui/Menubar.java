@@ -1,15 +1,17 @@
 package solderoven.gui;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import solderoven.exception.OvenBoardException;
 import solderoven.i18n.I18N;
@@ -26,6 +28,11 @@ public class Menubar extends JMenuBar implements PropertyChangeListener{
     private AppModel model;
     
     /**
+     * The frame to which this menu is attached.
+     */
+    private JFrame parentFrame;
+    
+    /**
      * The File menu connect button
      */
     JMenuItem connect;
@@ -37,9 +44,12 @@ public class Menubar extends JMenuBar implements PropertyChangeListener{
     
     /**
      * Constructor
+     * @param model the main application model.
+     * @param parentFrame the frame to which this MenuBar is attached.
      */
-    public Menubar(AppModel model){
+    public Menubar(AppModel model, JFrame parentFrame){
         this.model = model;
+        this.parentFrame = parentFrame;
         
         // Create and add all the menus
         createAndAddFileMenu();
@@ -79,7 +89,7 @@ public class Menubar extends JMenuBar implements PropertyChangeListener{
         JMenuItem loadProfile = new JMenuItem(new AbstractAction(I18N.getInstance().getString("btnLoad")){
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                MessageDialog.getInstance().openReflowProfile(parentFrame);
             }         
         });
         loadProfile.setMnemonic(I18N.getInstance().getString("btnLoadMnemonic").charAt(0));
