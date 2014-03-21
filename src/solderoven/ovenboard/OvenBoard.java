@@ -215,6 +215,11 @@ public class OvenBoard {
         private SerialPort serialPort;
         
         /**
+         * Buffer for receiving data 
+         */
+        private StringBuilder receiveBuffer;
+        
+        /**
          * The constructor.
          * @param port an opened serial port. 
          */
@@ -232,21 +237,30 @@ public class OvenBoard {
             // The oven board spits out 39 bytes per info line, ASCII coded 
             if(event.getEventValue() == 1){
                 // Try to parse the incoming data. 
-                try {
+                try { 
                     String received = new String(serialPort.readBytes());
                     
-                    /* Parse the data */
-                    float temperature = Float.parseFloat(received.substring(0, 5));
-                    boolean sensorstate = received.charAt(13) == 'K';
-                    boolean heaterstate = received.charAt(21) == 'N';
-                    boolean fanstate = received.charAt(28) == 'N';
-                    boolean coolstate = received.charAt(36) == 'N';
+                    if(received.equals("{")){
+                        // Start of inputstring is received
+                        this.receiveBuffer = new StringBuilder();
+                    } else if(received.equals("}")) {
+                        // Parse the received string 
+                        String[] input = receiveBuffer.toString().split(",");
+                        float temperature = Float.parseFloat(input[0]);
+                        boolean sensorstate = input[1].charAt(7) == 'K';
+                        boolean heaterstate = input[2].charAt(6) == 'N';
+                        boolean fanstate = input[3].charAt(5) == 'N';
+                        boolean coolstate = input[4].charAt(6) == 'N';
+                        
+                        // Save oven data in container
+                        OvenData data = new OvenData(temperature, sensorstate, heaterstate, fanstate, coolstate);
                     
-                    // Save oven data in container
-                    OvenData data = new OvenData(temperature, sensorstate, heaterstate, fanstate, coolstate);
-                    
-                    // Propagate event to all listeners           
-                    fireBoardDataEvent(data);
+                        // Propagate event to all listeners           
+                        fireBoardDataEvent(data);
+                    } else {
+                        // Append received character
+                        this.receiveBuffer.append(received);
+                    } 
                 }
                 catch (SerialPortException ex) {
                     ExceptionHandler.getInstance().handleException(ex);

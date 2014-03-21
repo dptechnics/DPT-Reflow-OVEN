@@ -144,6 +144,28 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                     connectBtn.setText(I18N.getInstance().getString("btnConnect"));
                 }
                 break;
+            case "ovenData":
+                // Update heater button
+                if(model.getBoardModel().getCurrentStatus().isHeaterOn()){
+                    heaterBtn.setText(I18N.getInstance().getString("btnHeaterOff"));
+                } else {
+                    heaterBtn.setText(I18N.getInstance().getString("btnHeaterOn"));
+                }
+                
+                // Update fan button
+                if(model.getBoardModel().getCurrentStatus().isFanOn()){
+                    fanBtn.setText(I18N.getInstance().getString("btnFanOff"));
+                } else {
+                    fanBtn.setText(I18N.getInstance().getString("btnFanOn"));
+                }
+                
+                // Update cooling button
+                if(model.getBoardModel().getCurrentStatus().isCoolingOn()){
+                    coolBtn.setText(I18N.getInstance().getString("btnCoolOff"));
+                } else {
+                    coolBtn.setText(I18N.getInstance().getString("btnCoolOn"));
+                }
+                break;
         }
     }
 }
