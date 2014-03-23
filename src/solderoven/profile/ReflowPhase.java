@@ -39,6 +39,13 @@ public class ReflowPhase {
         this.stop = stop;
         this.target = target;
     }
+    
+    /**
+     * Default constructor for lazy constructing.
+     */
+    public ReflowPhase() {
+        this("", 0, 0, 0);
+    }
 
     public String getName() {
         return name;
@@ -70,5 +77,18 @@ public class ReflowPhase {
 
     public void setTarget(int target) {
         this.target = target;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("name: ");
+        builder.append(this.name);
+        builder.append(", start: ");
+        builder.append(this.start);
+        builder.append(", stop: ");
+        builder.append(this.stop);
+        builder.append(", targettemp: ");
+        builder.append(this.target);
+        return builder.toString();
     }
 }

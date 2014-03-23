@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -16,6 +17,7 @@ import javax.swing.KeyStroke;
 import solderoven.exception.OvenBoardException;
 import solderoven.i18n.I18N;
 import solderoven.models.AppModel;
+import solderoven.profile.ProfileParser;
 
 /**
  * @author Daan Pape
@@ -89,7 +91,10 @@ public class Menubar extends JMenuBar implements PropertyChangeListener{
         JMenuItem loadProfile = new JMenuItem(new AbstractAction(I18N.getInstance().getString("btnLoad")){
             @Override
             public void actionPerformed(ActionEvent e) {
-                MessageDialog.getInstance().openReflowProfile(parentFrame);
+                File file = MessageDialog.getInstance().openReflowProfile(parentFrame);
+                
+                // Testing
+                new ProfileParser(file).parseFile();
             }         
         });
         loadProfile.setMnemonic(I18N.getInstance().getString("btnLoadMnemonic").charAt(0));

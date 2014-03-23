@@ -65,6 +65,13 @@ public class Product {
         this.partNumber = partNumber;
         this.description = description;
     }
+    
+    /**
+     * Default constructor for lazy constructing.
+     */
+    public Product() {
+        this("", "", "", false, false, 0, "", "");
+    }
 
     public String getBrand() {
         return brand;
@@ -128,5 +135,27 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    
+    public String toString(){
+        StringBuilder builder = new StringBuilder("brand: ");
+        builder.append(this.brand);
+        builder.append(", name: ");
+        builder.append(this.name);
+        builder.append(", alloy: ");
+        builder.append(this.alloy);
+        builder.append(", leadfree: ");
+        builder.append(this.leadFree ? "yes" : "no");
+        builder.append(", noclean: ");
+        builder.append(this.noClean ? "yes" : "no");
+        builder.append(", powdersize: ");
+        builder.append(this.powderSize);
+        builder.append(", partnumber: ");
+        builder.append(this.partNumber);
+        builder.append(", description: ");
+        builder.append(this.description);
+        return builder.toString();
+        
     }
 }
