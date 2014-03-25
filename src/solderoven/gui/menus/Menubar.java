@@ -1,23 +1,19 @@
-package solderoven.gui;
+package solderoven.gui.menus;
 
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
+import solderoven.actions.LoadProfileAction;
 import solderoven.exception.OvenBoardException;
 import solderoven.i18n.I18N;
 import solderoven.models.AppModel;
-import solderoven.profile.ProfileParser;
 
 /**
  * @author Daan Pape
@@ -88,15 +84,7 @@ public class Menubar extends JMenuBar implements PropertyChangeListener{
         options.setMnemonic(I18N.getInstance().getString("btnOptionsMnemonic").charAt(0));
         
         // Construct the load profile button
-        JMenuItem loadProfile = new JMenuItem(new AbstractAction(I18N.getInstance().getString("btnLoad")){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                File file = MessageDialog.getInstance().openReflowProfile(parentFrame);
-                
-                // Testing
-                new ProfileParser(file).parseFile();
-            }         
-        });
+        JMenuItem loadProfile = new JMenuItem(new LoadProfileAction(model, parentFrame));
         loadProfile.setMnemonic(I18N.getInstance().getString("btnLoadMnemonic").charAt(0));
         loadProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         

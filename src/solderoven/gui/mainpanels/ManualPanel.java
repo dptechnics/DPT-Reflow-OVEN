@@ -1,4 +1,4 @@
-package solderoven.gui;
+package solderoven.gui.mainpanels;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -9,7 +9,9 @@ import java.beans.PropertyChangeListener;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import solderoven.exception.ExceptionHandler;
 import solderoven.exception.OvenBoardException;
+import solderoven.gui.dialogs.MessageDialog;
 import solderoven.i18n.I18N;
 import solderoven.models.AppModel;
 
@@ -63,6 +65,7 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                     try {
                         model.getOvenBoard().connectToBoard();
                     } catch (OvenBoardException ex) {
+                        ExceptionHandler.getInstance().handleException(ex);
                         MessageDialog.getInstance().showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
                     }
                 }
@@ -82,6 +85,7 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                 try {
                     model.getOvenBoard().setHeaterState(!model.getBoardModel().getCurrentStatus().isHeaterOn());
                 } catch (OvenBoardException ex) {
+                    ExceptionHandler.getInstance().handleException(ex);
                     MessageDialog.getInstance().showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
                 }
             }
@@ -99,6 +103,7 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                 try {
                     model.getOvenBoard().setFanState(!model.getBoardModel().getCurrentStatus().isFanOn());
                 } catch (OvenBoardException ex) {
+                    ExceptionHandler.getInstance().handleException(ex);
                     MessageDialog.getInstance().showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
                 }
             }        
@@ -116,6 +121,7 @@ public class ManualPanel extends JPanel implements PropertyChangeListener{
                 try {
                     model.getOvenBoard().setCoolState(!model.getBoardModel().getCurrentStatus().isCoolingOn());
                 } catch (OvenBoardException ex) {
+                    ExceptionHandler.getInstance().handleException(ex);
                     MessageDialog.getInstance().showErrorDialog(ex.getLocalizedTitle(), ex.getLocalizedMessage());
                 }
             }

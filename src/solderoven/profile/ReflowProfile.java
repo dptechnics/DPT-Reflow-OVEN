@@ -75,6 +75,30 @@ public class ReflowProfile {
         this.phases.add(reflowPhase);
     }
     
+    /**
+     * Get the name of this reflow profile.
+     * @return the name of the reflow profile.
+     */
+    public String getName() {
+        return this.name;
+    }
+    
+    /**
+     * Get all the products supported by this profile.
+     * @return the list of products supported by this profile.
+     */
+    public List<Product> getReflowProducts() {
+        return this.products;
+    }
+    
+    /**
+     * Get all the reflow phases present in this profile.
+     * @return all the reflow phases.
+     */
+    public List<ReflowPhase> getReflowPhases() {
+        return this.phases;
+    }
+    
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder("Name: ");

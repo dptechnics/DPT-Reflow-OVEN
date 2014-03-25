@@ -1,4 +1,4 @@
-package solderoven.gui;
+package solderoven.gui.dialogs;
 
 import java.awt.Component;
 import java.awt.EventQueue;

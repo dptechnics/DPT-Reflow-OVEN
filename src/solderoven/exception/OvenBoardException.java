@@ -1,7 +1,5 @@
 package solderoven.exception;
 
-import solderoven.i18n.I18N;
-
 /**
  * @author Daan Pape
  */

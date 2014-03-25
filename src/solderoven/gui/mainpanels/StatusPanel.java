@@ -1,4 +1,4 @@
-package solderoven.gui;
+package solderoven.gui.mainpanels;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

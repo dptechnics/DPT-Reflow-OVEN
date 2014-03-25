@@ -6,6 +6,8 @@ import java.beans.PropertyChangeListener;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import solderoven.profile.ReflowPhase;
+import solderoven.profile.ReflowProfile;
 
 /**
  * @author Daan Pape
@@ -28,6 +30,11 @@ public class TemperatureChartModel extends Model implements PropertyChangeListen
     private BoardModel boardModel;
     
     /**
+     * The main application model
+     */
+    private AppModel appModel;
+    
+    /**
      * The title of the temperature graph
      */
     private String graphTitle;
@@ -44,8 +51,9 @@ public class TemperatureChartModel extends Model implements PropertyChangeListen
     
     /**
      * Constructor initialising the XY data series 
+     * @param appModel the application model
      */
-    public TemperatureChartModel(BoardModel model){
+    public TemperatureChartModel(AppModel appModel){
         // Set default graph names
         graphTitle = I18N.getInstance().getString("graphTitle");
         xAxisLabel = I18N.getInstance().getString("graphXAxis");
@@ -56,16 +64,12 @@ public class TemperatureChartModel extends Model implements PropertyChangeListen
         targetProfile = new XYSeries(I18N.getInstance().getString("graphTarget"));
         
         // Register with the board model
-        this.boardModel = model;
+        this.boardModel = appModel.getBoardModel();
         this.boardModel.addPropertyChangeListener(this);
         
-        //TODO: STUB STUB STUB
-        targetProfile.add(0, 20);
-        targetProfile.add(90, 150);
-        targetProfile.add(210, 183);
-        targetProfile.add(240, 220);
-        targetProfile.add(270, 183);
-        targetProfile.add(300, 150);
+        // Register with the application model
+        this.appModel = appModel;
+        this.appModel.addPropertyChangeListener(this);
     }
     
     /**
@@ -159,8 +163,22 @@ public class TemperatureChartModel extends Model implements PropertyChangeListen
                 // Handle new data in the BoardModel
                 measuredProfile.add(boardModel.getCurrentTime(), boardModel.getCurrentStatus().getTemperature());
         
-                // Propagate event to registered 
+                // Propagate event to registered listeners
                 pcs.firePropertyChange("chartData", null, this.getChartDataset());   
+                break;
+                
+            case "reflowProfile":
+                // Create new target model
+                this.targetProfile.clear();
+                
+                ReflowProfile profile = (ReflowProfile) evt.getNewValue();
+                this.targetProfile.add(0, 20);
+                for(ReflowPhase phase : profile.getReflowPhases()) {       
+                    this.targetProfile.add(phase.getStop(), phase.getTarget());
+                }
+                
+                // Propagate event to registered listeners
+                pcs.firePropertyChange("chartData", null, this.getChartDataset());  
                 break;
         }
     }

@@ -1,4 +1,4 @@
-package solderoven.gui;
+package solderoven.gui.chart;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -15,7 +15,6 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.general.DatasetChangeEvent;
 import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
-import org.jfree.ui.VerticalAlignment;
 import solderoven.models.TemperatureChartModel;
 
 /**

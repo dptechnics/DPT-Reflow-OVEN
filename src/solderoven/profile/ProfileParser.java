@@ -9,6 +9,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import solderoven.exception.ExceptionHandler;
+import solderoven.exception.ProfileParseException;
 
 /**
  * @author Daan Pape
@@ -31,7 +33,7 @@ public class ProfileParser {
     /**
      * Parse the XML file and read data.
      */
-    public ReflowProfile parseFile(){
+    public ReflowProfile parseFile() throws ProfileParseException{
         // Check if the file is set
         if(this.profileFile != null){
             try {
@@ -109,15 +111,24 @@ public class ProfileParser {
                     profile.addReflowPhase(phase);
                 }
                 
-                // Return the reflow profile
-                System.out.println(profile.toString());
                 return profile;
             } catch (ParserConfigurationException | SAXException | IOException ex) {
-                ex.printStackTrace();
-                return null;
+                ExceptionHandler.getInstance().handleException(ex);
+                throw new ProfileParseException(
+                    "parseError", 
+                    "Unable to parse the file", 
+                    profileFile);
+            } catch (NullPointerException ex) {
+                throw new ProfileParseException(
+                    "invalidFile", 
+                    "This is not a reflow profile XML file.", 
+                    profileFile);
             }
         } else {
-            return null;
+            throw new ProfileParseException(
+                "fileNotSetError", 
+                "There was no file loaded for parsing.", 
+                profileFile);
         }
     }
 }

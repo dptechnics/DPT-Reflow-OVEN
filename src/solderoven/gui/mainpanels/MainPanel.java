@@ -1,4 +1,4 @@
-package solderoven.gui;
+package solderoven.gui.mainpanels;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -7,6 +7,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import solderoven.gui.chart.TemperatureChart;
 import solderoven.i18n.I18N;
 import solderoven.models.AppModel;
 import solderoven.models.TemperatureChartModel;
@@ -79,7 +80,7 @@ public class MainPanel extends JPanel{
         
         
         // Add the temperature chart
-        TemperatureChart tChart = new TemperatureChart(new TemperatureChartModel(model.getBoardModel()));
+        TemperatureChart tChart = new TemperatureChart(new TemperatureChartModel(model));
         TitledBorder cBorder = BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), 
                 I18N.getInstance().getString("graphTitle"),
@@ -93,5 +94,23 @@ public class MainPanel extends JPanel{
         c.gridheight = 2;
         c.insets = new Insets(5, 5, 5, 5);
         this.add(tChart, c);
+        
+        // Add the reflow control panel
+        ReflowPanel reflowPanel = new ReflowPanel(this.model);
+        TitledBorder rBorder = BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), 
+                I18N.getInstance().getString("titleReflow"),
+                TitledBorder.CENTER,
+                TitledBorder.DEFAULT_POSITION
+                );
+        reflowPanel.setBorder(rBorder);
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 0;
+        c.gridheight = 2;
+        c.insets = new Insets(5, 5, 5, 5);
+        c.anchor = GridBagConstraints.NORTH;
+        this.add(reflowPanel, c);
+        
     }
 }

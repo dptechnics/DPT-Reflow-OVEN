@@ -1,6 +1,7 @@
 package solderoven.models;
 
 import solderoven.ovenboard.OvenBoard;
+import solderoven.profile.ReflowProfile;
 
 /**
  * @author Daan Pape
@@ -18,6 +19,11 @@ public class AppModel extends Model{
     private OvenBoard ovenBoard;
     
     /**
+     * The current loaded profile
+     */
+    private ReflowProfile profile;
+    
+    /**
      * Default constructor 
      */
     public AppModel(){
@@ -27,6 +33,9 @@ public class AppModel extends Model{
         // Create a model for the board data
         boardModel = new BoardModel();
         ovenBoard.addOvenBoardListener(boardModel);
+        
+        // Set the current profile to null
+        this.profile = null;
     }
     
     /**
@@ -43,5 +52,23 @@ public class AppModel extends Model{
      */
     public OvenBoard getOvenBoard(){
         return this.ovenBoard;
+    }
+    
+    /**
+     * Get the currently loaded reflow profile.
+     * @return the currently loaded reflow profile.
+     */
+    public ReflowProfile getReflowProfile() {
+        return this.profile;
+    }
+    
+    /**
+     * Set a new reflow profile.
+     * @param profile the loaded reflow profile.
+     */
+    public void setReflowProfile(ReflowProfile profile) {
+        ReflowProfile oldValue = this.profile;
+        this.profile = profile;
+       super.pcs.firePropertyChange("reflowProfile", oldValue, this.profile);
     }
 }

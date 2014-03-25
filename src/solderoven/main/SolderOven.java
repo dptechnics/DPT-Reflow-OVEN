@@ -4,8 +4,8 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.net.URL;
 import javax.swing.JFrame;
-import solderoven.gui.MainPanel;
-import solderoven.gui.Menubar;
+import solderoven.gui.mainpanels.MainPanel;
+import solderoven.gui.menus.Menubar;
 import solderoven.i18n.I18N;
 import solderoven.models.AppModel;
 
