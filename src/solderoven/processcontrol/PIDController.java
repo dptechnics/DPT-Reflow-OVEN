@@ -21,6 +21,11 @@ public class PIDController {
     private double differentialGain;
     
     /**
+     * The sample period in milliseconds
+     */
+    private double samplePeriod;
+    
+    /**
      * The differentiator state.
      */
     private double derivativeState;
@@ -56,6 +61,27 @@ public class PIDController {
     private double setPoint;
     
     /**
+     * Construct a new PID controller
+     */
+    public PIDController() {
+        
+    }
+    
+    /**
+     * Step the PID to the next step.
+     * @param currentValue the current measured value from the plant
+     * @return the PID feedback.
+     */
+    public double updatePID(double currentValue) {
+        // Save the previous error and calculate new one.
+        this.previousError = this.error;
+        this.error = this.setPoint - currentValue;
+        
+        // Calculate P, I, and D terms and return.
+        return this.calcProportionalTerm() + this.calcIntegralTerm() + this.calcDifferentialTerm();
+    }
+    
+    /**
      * Calculate the proportional term from the PID control loop.
      * @return the proportional feedback for the plant.
      */
@@ -68,7 +94,7 @@ public class PIDController {
      * @return the integrator feedback for the plant.
      */
     private double calcIntegralTerm() {
-        integralState += this.error;
+        integralState += this.error * this.samplePeriod;
         
         // Limit the integral
         if(this.integralState > this.integratorMax) {
@@ -85,6 +111,6 @@ public class PIDController {
      * @return the differential 
      */
     private double calcDifferentialTerm() {
-        return (this.error - this.previousError) * this.differentialGain;
+        return ((this.error - this.previousError)/this.samplePeriod) * this.differentialGain;
     }
 }

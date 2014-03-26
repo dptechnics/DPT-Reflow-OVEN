@@ -2,8 +2,6 @@ package solderoven.ovenboard;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -11,12 +9,25 @@ import jssc.SerialPortException;
 import solderoven.config.Config;
 import solderoven.exception.ExceptionHandler;
 import solderoven.exception.OvenBoardException;
+import solderoven.processcontrol.PIDController;
 import solderoven.processcontrol.PWMControllable;
+import solderoven.processcontrol.PWMController;
 
 /**
  * @author Daan Pape
  */
 public class OvenBoard implements PWMControllable{
+    
+    /**
+     * The PWMController controlling the heater element from the board
+     */
+    private PWMController pwmController;
+    
+    /**
+     * The PIDController controlling the PWM controller from the board
+     */
+    private PIDController pidController;
+    
     /**
      * The listeners listing to incoming board data.
      */
@@ -37,6 +48,12 @@ public class OvenBoard implements PWMControllable{
      */
     public OvenBoard(){
         this.ovenBoardListenerList = new ArrayList<>();
+        
+        // Set up the boards PWM controller
+        this.pwmController = new PWMController(this);
+        
+        // Set up the boards PID controller
+        this.pidController = new PIDController();
     }
     
     /**
@@ -215,11 +232,29 @@ public class OvenBoard implements PWMControllable{
     @Override
     public void setState(boolean state) {
         try {
-            this.setHeaterState(state);
+            if(this.isConnected()) {
+                this.setHeaterState(state);
+            }
         } catch (OvenBoardException ex) {
             //TODO: handle exception
             ExceptionHandler.getInstance().handleException(ex);
         }
+    }
+    
+    /**
+     * Return the PWM controller from the board.
+     * @return the boards PWM controller.
+     */
+    public PWMController getPWMController() {
+        return this.pwmController;
+    }
+    
+    /**
+     * Return the PID controller from the board.
+     * @return the boards PID controller.
+     */
+    public PIDController getPIDController() {
+        return this.pidController;
     }
     
     /**
@@ -256,28 +291,29 @@ public class OvenBoard implements PWMControllable{
                 // Try to parse the incoming data. 
                 try { 
                     String received = new String(serialPort.readBytes());
-                    
-                    if(received.equals("{")){
-                        // Start of inputstring is received
-                        this.receiveBuffer = new StringBuilder();
-                    } else if(received.equals("}")) {
-                        // Parse the received string 
-                        String[] input = receiveBuffer.toString().split(",");
-                        float temperature = Float.parseFloat(input[0]);
-                        boolean sensorstate = input[1].charAt(7) == 'K';
-                        boolean heaterstate = input[2].charAt(6) == 'N';
-                        boolean fanstate = input[3].charAt(5) == 'N';
-                        boolean coolstate = input[4].charAt(6) == 'N';
-                        
-                        // Save oven data in container
-                        OvenData data = new OvenData(temperature, sensorstate, heaterstate, fanstate, coolstate);
-                    
-                        // Propagate event to all listeners           
-                        fireBoardDataEvent(data);
-                    } else {
-                        // Append received character
-                        this.receiveBuffer.append(received);
-                    } 
+                    switch (received) {
+                        case "{":
+                            // Start of inputstring is received
+                            this.receiveBuffer = new StringBuilder();
+                            break;
+                        case "}":
+                            // Parse the received string
+                            String[] input = receiveBuffer.toString().split(",");
+                            float temperature = Float.parseFloat(input[0]);
+                            boolean sensorstate = input[1].charAt(7) == 'K';
+                            boolean heaterstate = input[2].charAt(6) == 'N';
+                            boolean fanstate = input[3].charAt(5) == 'N';
+                            boolean coolstate = input[4].charAt(6) == 'N';
+                            // Save oven data in container
+                            OvenData data = new OvenData(temperature, sensorstate, heaterstate, fanstate, coolstate);
+                            // Propagate event to all listeners
+                            fireBoardDataEvent(data);
+                            break;
+                        default:
+                            // Append received character
+                            this.receiveBuffer.append(received);
+                            break; 
+                    }
                 }
                 catch (SerialPortException ex) {
                     ExceptionHandler.getInstance().handleException(ex);

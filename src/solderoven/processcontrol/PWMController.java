@@ -1,7 +1,5 @@
 package solderoven.processcontrol;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import solderoven.exception.ExceptionHandler;
 
 /**
@@ -71,8 +69,25 @@ public class PWMController {
      * Recalculate the device on/off times.
      */
     private synchronized void updateTiming() {
-        this.deviceOnTime = (int) (this.period * this.dutyCycle);
+        
+        this.deviceOnTime = (int) ((this.period * this.dutyCycle)/100);
         this.deviceOffTime = this.period - this.deviceOnTime;
+    }
+    
+    /**
+     * Get the PWM period in milliseconds.
+     * @return the PWM period.
+     */
+    public int getPeriod() {
+        return this.period;
+    }
+    
+    /**
+     * Get the PWM duty cycle in percent.
+     * @return the PWM duty cycle.
+     */
+    public double getDutyCycle() {
+        return this.dutyCycle;
     }
     
     /**

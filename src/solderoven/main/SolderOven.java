@@ -8,6 +8,8 @@ import solderoven.gui.mainpanels.MainPanel;
 import solderoven.gui.menus.Menubar;
 import solderoven.i18n.I18N;
 import solderoven.models.AppModel;
+import solderoven.processcontrol.PWMControllable;
+import solderoven.processcontrol.PWMController;
 
 /**
  *

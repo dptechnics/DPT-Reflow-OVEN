@@ -12,6 +12,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import solderoven.actions.LoadProfileAction;
 import solderoven.exception.OvenBoardException;
+import solderoven.gui.manualpwm.PWMFrame;
 import solderoven.i18n.I18N;
 import solderoven.models.AppModel;
 
@@ -51,6 +52,7 @@ public class Menubar extends JMenuBar implements PropertyChangeListener{
         
         // Create and add all the menus
         createAndAddFileMenu();
+        createAndAddProcessMenu();
         createAndAddHelpMenu();
         
         // Register as listeners 
@@ -128,6 +130,31 @@ public class Menubar extends JMenuBar implements PropertyChangeListener{
         // Set the File menu Mnemonic and add to the menu bar
         file.setMnemonic(I18N.getInstance().getString("fileMenuMnemonic").charAt(0));
         this.add(file);
+    }
+    
+    /**
+     * Create and add the process menu
+     */
+    private void createAndAddProcessMenu(){
+        // Construct and add the menu
+        JMenu processMenu = new JMenu(I18N.getInstance().getString("processMenu"));
+        
+        // Construct the help button
+        JMenuItem pwmSettings = new JMenuItem(new AbstractAction(I18N.getInstance().getString("btnPWMSettings")) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show the PWMFrame
+                new PWMFrame(model).setVisible(true);
+            }
+        });
+        pwmSettings.setMnemonic(I18N.getInstance().getString("btnPWMSettingsMnemonic").charAt(0));
+        
+        // Add the menu items
+        processMenu.add(pwmSettings);
+        
+        // Set the File menu Mnemonic and add to the menu bar
+        processMenu.setMnemonic(I18N.getInstance().getString("processMenuMnemonic").charAt(0));
+        this.add(processMenu);
     }
     
     /**
