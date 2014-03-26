@@ -2,6 +2,8 @@ package solderoven.ovenboard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -9,11 +11,12 @@ import jssc.SerialPortException;
 import solderoven.config.Config;
 import solderoven.exception.ExceptionHandler;
 import solderoven.exception.OvenBoardException;
+import solderoven.processcontrol.PWMControllable;
 
 /**
  * @author Daan Pape
  */
-public class OvenBoard {
+public class OvenBoard implements PWMControllable{
     /**
      * The listeners listing to incoming board data.
      */
@@ -203,6 +206,20 @@ public class OvenBoard {
      */
     public void setCoolLedState(boolean state) throws OvenBoardException {
         this.sendBoardCommand(state ? 'r' : 't');
+    }
+
+    /**
+     * This method is called by the PWM controller to set the board heater state.
+     * @param state true if the heater should be turned on.
+     */
+    @Override
+    public void setState(boolean state) {
+        try {
+            this.setHeaterState(state);
+        } catch (OvenBoardException ex) {
+            //TODO: handle exception
+            ExceptionHandler.getInstance().handleException(ex);
+        }
     }
     
     /**
