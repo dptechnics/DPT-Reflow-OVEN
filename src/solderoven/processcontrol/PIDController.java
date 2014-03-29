@@ -64,7 +64,17 @@ public class PIDController {
      * Construct a new PID controller
      */
     public PIDController() {
+        this.proportionalGain = 20;
+        this.integralGain = 0.1;
+        this.differentialGain = 100;
         
+        this.previousError = 0;
+        this.setPoint = 100;
+        this.integralState = 0;
+        this.integratorMax = 10000;
+        this.integratorMin = 10000;
+        
+        this.samplePeriod = 1000;
     }
     
     /**

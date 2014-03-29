@@ -40,11 +40,11 @@ public class PWMController {
     
     /**
      * Construct a new PWM controller with a standard
-     * period of 5 seconds and 50% duty cycle. 
+     * period of 2.5 seconds and 50% duty cycle. 
      * @param device the device to control.
      */
     public PWMController(PWMControllable device) {
-        this.period = 5000;
+        this.period = 2500;
         this.dutyCycle = 50;
         this.device = device;
         this.runningState = false;

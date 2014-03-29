@@ -9,6 +9,7 @@ import jssc.SerialPortException;
 import solderoven.config.Config;
 import solderoven.exception.ExceptionHandler;
 import solderoven.exception.OvenBoardException;
+import solderoven.processcontrol.OnOffController;
 import solderoven.processcontrol.PIDController;
 import solderoven.processcontrol.PWMControllable;
 import solderoven.processcontrol.PWMController;
@@ -27,6 +28,7 @@ public class OvenBoard implements PWMControllable{
      * The PIDController controlling the PWM controller from the board
      */
     private PIDController pidController;
+    private OnOffController onOffController;
     
     /**
      * The listeners listing to incoming board data.
@@ -54,6 +56,7 @@ public class OvenBoard implements PWMControllable{
         
         // Set up the boards PID controller
         this.pidController = new PIDController();
+        this.onOffController = new OnOffController();
     }
     
     /**
@@ -126,6 +129,9 @@ public class OvenBoard implements PWMControllable{
             serialPort.setEventsMask(SerialPort.MASK_RXCHAR);
             serialPort.addEventListener(new SerialPortReader(serialPort));
             
+            // Stop blinking leds
+            this.setLedBlinkState(false);
+            
             // Notify listeners the board is connected
             fireBoardConnectedEvent(true);
         }
@@ -152,10 +158,16 @@ public class OvenBoard implements PWMControllable{
     public void closeConnection(){
         if(serialPort != null && serialPort.isOpened()){
             try {
+                // Turn off all elements
+                this.setHeaterState(false);
+                this.setFanState(false);
+                this.setCoolState(false);
+                this.setLedBlinkState(true);
+                
                 serialPort.closePort();
                 // Notify listeners the board is not connected
                 fireBoardConnectedEvent(false);
-            } catch (SerialPortException ex) {
+            } catch (SerialPortException | OvenBoardException ex) {
                 ExceptionHandler.getInstance().handleException(ex);
             }
         }
@@ -272,11 +284,18 @@ public class OvenBoard implements PWMControllable{
         private StringBuilder receiveBuffer;
         
         /**
+         * The previously measured temperature for spike compensation
+         */
+        private float previousTemperature;
+        
+        /**
          * The constructor.
          * @param port an opened serial port. 
          */
         public SerialPortReader(SerialPort port){
             this.serialPort = port;
+            this.receiveBuffer = new StringBuilder();
+            this.previousTemperature = -1;
         }
         
         /**
@@ -286,11 +305,11 @@ public class OvenBoard implements PWMControllable{
          */
         @Override
         public void serialEvent(SerialPortEvent event) {
-            // The oven board spits out 39 bytes per info line, ASCII coded 
-            if(event.getEventValue() == 1){
+            // The oven board spits out ASCII coded data
+            if(event.isRXCHAR() && event.getEventValue() > 0){
                 // Try to parse the incoming data. 
                 try { 
-                    String received = new String(serialPort.readBytes());
+                    String received = serialPort.readString(1);
                     switch (received) {
                         case "{":
                             // Start of inputstring is received
@@ -304,6 +323,31 @@ public class OvenBoard implements PWMControllable{
                             boolean heaterstate = input[2].charAt(6) == 'N';
                             boolean fanstate = input[3].charAt(5) == 'N';
                             boolean coolstate = input[4].charAt(6) == 'N';
+                            
+                            // SSR influance correction 
+                            if(heaterstate) {
+                                temperature += 4.5f;
+                            }
+                            
+                            if(fanstate) {
+                                temperature += 4.5f;
+                            }
+                            
+                            if(previousTemperature == -1){
+                                previousTemperature = temperature;
+                            }
+                            
+                            if(temperature - previousTemperature > 3) {
+                                temperature = previousTemperature + 0.5f;
+                            }else if(previousTemperature - temperature > 3) {
+                                temperature = previousTemperature - 0.5f;
+                            }
+                            previousTemperature = temperature;
+                            
+                            // Input the data into the boards PID controller
+                            System.out.println("PID output: " + pidController.updatePID(temperature));
+                            onOffController.updateControls(pwmController, temperature);
+                            
                             // Save oven data in container
                             OvenData data = new OvenData(temperature, sensorstate, heaterstate, fanstate, coolstate);
                             // Propagate event to all listeners

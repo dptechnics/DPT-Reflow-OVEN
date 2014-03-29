@@ -1,8 +1,12 @@
 package solderoven.gui.manualpwm;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -29,6 +33,8 @@ public class PWMSettingsPane extends JPanel{
      * Textfield containing the pwm duty cycle
      */
     private JTextField pwmDutyCycle;
+    
+    
     
     public PWMSettingsPane(AppModel model) {
         this.controller = model.getOvenBoard().getPWMController();
@@ -62,8 +68,29 @@ public class PWMSettingsPane extends JPanel{
         c.insets = new Insets(5, 0, 5, 5);
         c.fill = GridBagConstraints.HORIZONTAL;
         this.add(pwmPeriodUnitLabel, c);
+        
+        // Add the period set button
+        JButton periodSetBtn = new JButton(new AbstractAction(I18N.getInstance().getString("btnSet")) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Try to parse the number and set the PWM period
+                    int newPeriod = Integer.parseInt(pwmPeriod.getText());
+                    pwmPeriod.setBackground(Color.white);
+                    controller.setPeriod(newPeriod);
+                } catch (NumberFormatException ex) {
+                    pwmPeriod.setBackground(Color.red);
+                }
+            }
+        });
+        c = new GridBagConstraints();
+        c.gridx = 3;
+        c.gridy = 0;
+        c.insets = new Insets(5, 5, 5, 5);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        this.add(periodSetBtn, c);
 
-                // Add the period label
+        // Add the period label
         JLabel dutyCycleLabel = new JLabel(I18N.getInstance().getString("pwmDutyCycle") + ":");
         c = new GridBagConstraints();
         c.gridx = 0;

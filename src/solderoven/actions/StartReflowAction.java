@@ -32,6 +32,7 @@ public class StartReflowAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         // TODO: start the reflow process
         System.out.println("Start the reflow process");
+        model.getOvenBoard().getPWMController().startPWM();
     }
 
 }
